@@ -54,8 +54,8 @@ def totalDistanceForEachCluster(sman, cluster, deplot):
 def Ploteachcluster(cluster, deplot):
     pl.title('Lo trinh cua cac nhan vien giao hang')
     pl.grid()
-    pl.xlim(xmin=minX - 5, xmax=maxX + 5)
-    pl.ylim(ymin=minY - 5, ymax=maxY + 5)
+    pl.xlim(xmin=0, xmax=maxX + 5)
+    pl.ylim(ymin=0, ymax=maxY + 5)
 
     for sman in cluster:
         # Vị trí đầu tiên bắt đầu từ kho
@@ -202,10 +202,8 @@ if __name__=='__main__':
     numOfOrders = 0
     # Số nhân viên giao hàng
     numOfSalesman = 0
-    # Tọa độ đơn hàng nhỏ nhất và lớn nhất
-    minX = 0
+    # Tọa độ đơn hàng lớn nhất
     maxX = 0
-    minY = 0
     maxY = 0
     # Tọa độ kho
     deplot = []
@@ -213,18 +211,6 @@ if __name__=='__main__':
     Id = 0
     # Danh sách thông tin các đơn hàng là 1 dictionary với key là Id
     orders = {}
-
-    # for i in range(numOfOrders):
-    #     orderItem = {}
-    #     x=np.random.randint(1,maxX)
-    #     y=np.random.randint(1,maxY)
-    #     orderItem["pos"] = [x,y]
-    #     v=np.random.randint(1,5)
-    #     orderItem["v"] = v
-    #     m=np.random.randint(1,5)
-    #     orderItem["m"] = m
-    #     orderItem["e"] = caculateEarningsEachOrderItem([v, m])
-    #     orders[str(i)]=orderItem
 
     # Đọc file input và lấy dữ liệu
     with open("input.txt") as fp:
@@ -242,10 +228,8 @@ if __name__=='__main__':
             orderItem = {}
             # Lấy tọa độ của đơn hàng
             x = int(line[0])
-            minX = x if x < minX else minX
             maxX = x if x > maxX else maxX
             y = int(line[1])
-            minY = y if y < minY else minY
             maxY = y if y > maxY else maxY
             # Lưu tọa độ với key là pos
             orderItem["pos"] = [x, y]

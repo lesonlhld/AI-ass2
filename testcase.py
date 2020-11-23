@@ -14,11 +14,10 @@ def genTest(filename):
     # Tọa độ kho
     x=np.random.randint(1,maxX)
     y=np.random.randint(1,maxY)
-    deplot = [x, y]
 
     # Ghi testcase ra file
     fo = open(filename, "w")
-    fo.write(str(deplot[0]) + " " + str(deplot[1]) + "\n")
+    fo.write(str(x) + " " + str(y) + "\n")
     fo.write(str(numOfSalesman) + " " + str(numOfOrders) + "\n")
 
     for i in range(numOfOrders):
