@@ -100,8 +100,13 @@ def kmeans(deplot, orders, numOfSalesman):
     while temperature > temperature_end:
         # Tạo random vị trí cho từng nhân viên
         t = randomPositionOfSalesman(numOfSalesman)
-        positionOfSalesman = list(set(tuple(i) for i in t))
+        print(t)
+        k=set(tuple(i) for i in t)
+        print(k)
+        positionOfSalesman = list(list(x) for x in k)
         print((positionOfSalesman))
+        
+        positionOfSalesman = list(set(t))
         # Nếu có nhiều nhân viên cùng 1 vị trí thì quay lại random vị trí khác cho các nhân viên
         if len(positionOfSalesman) < numOfSalesman:
             continue
