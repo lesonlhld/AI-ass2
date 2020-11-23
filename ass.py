@@ -2,53 +2,55 @@ import matplotlib.pyplot as pl
 import numpy as np
 import math
 
+# Hàm random vị trí cho các nhân viên
 def randomPositionOfSalesman(numOfSalesman):
+    # Danh sách vị trí của các nhân viên
     S = []
     for i in range(numOfSalesman):
-        s1 = np.random.randint(1, maxX)
-        s2 = np.random.randint(1, maxY)
-        S.append([s1, s2])
+        x = np.random.randint(1, maxX)
+        y = np.random.randint(1, maxY)
+        S.append([x, y])
     return S
 
-def caculateEarningsEachOrderItem(orderItem):
-    v, m = orderItem
+# Hàm tính công cho mỗi đơn hàng
+def caculateEarningsEachOrderItem(v, m):
     return 5 + v + m * 2
 
+# Hàm tính chi phí của mối nhân viên
 def caculateCostOfEachSalesman(distance):
     return distance / 40 *20 + 10
 
-def caculateSalaryOfEachSalesman(order, sman, cluster):
+# Hàm tính doanh thu cho mỗi nhân viên với danh sách đơn hàng mà họ được gán
+def caculateSalaryOfEachSalesman(orders, sman, cluster):
     salary = 0
     for x in cluster[sman]:
         salary += cluster[sman][x]["e"] 
     return salary
 
-def caculateProfitOfEachSaleman(sman, cluster, orderItem, deplot):
+# Hàm tính lợi nhuận của mỗi nhân viên
+def caculateProfitOfEachSaleman(sman, cluster, orders, deplot):
     distance = totalDistanceForEachCluster(sman, cluster, deplot)
     cost = caculateCostOfEachSalesman(distance)
-    salary = caculateSalaryOfEachSalesman(orderItem, sman, cluster)
+    salary = caculateSalaryOfEachSalesman(orders, sman, cluster)
     profit = salary - cost
     return profit
 
-def caculateMinimize(cluster, orders):
-    distance = {}
-    cost = {}
-    salary = {}
+# Hàm tính tổng chênh lệch lợi nhuận giữa các nhân viên
+def caculateMinimize(deplot, orders, cluster):
     profit = {}
     minimize = 0
     for sman in cluster:
-        distance[sman] = totalDistanceForEachCluster(sman, cluster, deplot)
-        cost[sman] = caculateCostOfEachSalesman(distance[sman])
-        salary[sman] = caculateSalaryOfEachSalesman(orders, sman, cluster)
-        profit[sman] = salary[sman] - cost[sman]
+        profit[sman] = caculateProfitOfEachSaleman(sman, cluster, orders, deplot)
     for sman in cluster:
         for nsam in cluster:
             minimize += abs(profit[sman] - profit[nsam])
     return minimize / 2
 
+# Hàm tính khoảng cách giữa 2 điểm tọa độ của 2 đơn hàng
 def distanceBetweenTwoPoints(P1, P2):
     return np.sqrt((P1[0]-P2[0])**2+(P1[1]-P2[1])**2)
 
+# Hàm tính tổng quãng đường mà nhân viên giao hàng cần đi từ kho
 def totalDistanceForEachCluster(sman, cluster, deplot):
     dist = 0
     clusterdist = [deplot]
@@ -58,285 +60,175 @@ def totalDistanceForEachCluster(sman, cluster, deplot):
         dist+=distanceBetweenTwoPoints(clusterdist[i],clusterdist[i+1])
     return dist
 
-def Ploteachcluster(cluster, distance, deplot):
-    colours = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
-    k=0
-
-    # p1 = pl.Rectangle((0,0),0.1,0.1,fc=colours[0])
-    # p2 = pl.Rectangle((0,0),0.1,0.1,fc=colours[1])
-    # p3 = pl.Rectangle((0,0),0.1,0.1,fc=colours[2])
-    # p4 = pl.Rectangle((0,0),0.1,0.1,fc=colours[3])
-    # p5 = pl.Rectangle((0,0),0.1,0.1,fc=colours[4])
-    # pl.legend((p1,p2,p3,p4,p5),('Salesman1','Salesman2','Salesman3','Salesman4','Salesman5'),loc='center right')
-
-
-    pl.title('Total distance=' + str(distance))
-    pl.xlim(xmin=-5,xmax=maxX + 5)
-    pl.ylim(ymin=-5,ymax=maxY + 5)
+# Hàm vẽ biểu đồ đường đi giao hàng từ kho của các nhân viên
+def Ploteachcluster(cluster, deplot):
+    pl.title('Lo trinh cua cac nhan vien giao hang')
+    pl.grid()
+    pl.xlim(xmin=minX - 5, xmax=maxX + 5)
+    pl.ylim(ymin=minY - 5, ymax=maxY + 5)
 
     for sman in cluster:
+        # Vị trí đầu tiên bắt đầu từ kho
         Pt = [deplot]
-        # Pt = [sman]
+        # Các vị trí tiếp theo của các đơn hàng
         Pt += list(cluster[sman][x]["pos"] for x in cluster[sman])
+        pos = [list(x) for x in set(tuple(i) for i in Pt)]
         Pt = np.array(Pt)
 
-        pl.plot(Pt[:,0],Pt[:,1],marker='o',c=colours[k])
-        k+=1
+        pl.plot(Pt[:,0],Pt[:,1],marker='o')
+        for x in pos:
+            pl.text(x[0],x[1]+0.25,"("+str(x[0]) + ", " + str(x[1]) +")", transform= pl.gca().transData, horizontalalignment = 'center' )
 
     pl.show()
 
 # Hàm tạo danh sách đơn hàng cho từng nhân viên giao hàng
-def kmeans(deplot, orders, numOfSalesman):
+def makeSolution(deplot, orders, numOfSalesman):
     # Danh sách kết quả các đơn hàng của từng nhân viên với key là vị trí của nhân viên đó
     solution = {}
     # Kết quả tối ưu lợi nhuận giữa các nhân viên
     minimize = 99999999
+    # Danh sách kết quả vị trí của các nhân viên
+    positionOfSalesman = []
 
     # Giới hạn số lần lặp
     temperature = 1e+10
-    cooling_rate = 0.85
+    cooling_rate = 0.90
     temperature_end = 0.0000000001
+    finalCount = 0
 
-    while temperature > temperature_end:
+    while (temperature > temperature_end) and (finalCount < 25):
         # Tạo random vị trí cho từng nhân viên
-        t = randomPositionOfSalesman(numOfSalesman)
-        print(t)
-        k=set(tuple(i) for i in t)
-        print(k)
-        positionOfSalesman = list(list(x) for x in k)
-        print((positionOfSalesman))
-        
-        positionOfSalesman = list(set(t))
+        tempPositionOfSalesman = randomPositionOfSalesman(numOfSalesman)
+        numSalesman = len(set(tuple(i) for i in tempPositionOfSalesman))
         # Nếu có nhiều nhân viên cùng 1 vị trí thì quay lại random vị trí khác cho các nhân viên
-        if len(positionOfSalesman) < numOfSalesman:
+        if numSalesman < numOfSalesman:
             continue
         # Danh sách tạm thời các đơn hàng của từng nhân viên với key là vị trí của các nhân viên
         cluster = {}
         for x in range(numOfSalesman):
-            key = tuple(positionOfSalesman[x])
+            key = tuple(tempPositionOfSalesman[x])
             cluster[key] = {}
         
-        
-
         # Thực hiện gán từng đơn hàng cho nhân viên với tiêu chí đơn hàng đó gần nhân viên nào nhất
         for i in orders:
             # Khoảng cách ngắn nhất của đơn hàng này đến nhân viên gần nhất
-            min = 99999999
+            minDistance = 99999999
             # Tọa độ nhân viên gần nhất
             pos = []
             # Duyệt từng nhân viên
             for j in range(numOfSalesman):
-                if(min > distanceBetweenTwoPoints(orders[i]["pos"],positionOfSalesman[j])):
+                if(minDistance > distanceBetweenTwoPoints(orders[i]["pos"],tempPositionOfSalesman[j])):
                     # Cập nhật khoảng cách ngắn nhất
-                    min = distanceBetweenTwoPoints(orders[i]["pos"],positionOfSalesman[j])
+                    minDistance = distanceBetweenTwoPoints(orders[i]["pos"],tempPositionOfSalesman[j])
                     # Cập nhật tọa độ nhân viên gần nhất
-                    pos = positionOfSalesman[j]
+                    pos = tempPositionOfSalesman[j]
 
             # Lấy danh sách đơn hàng của nhân viên gần nhất
             tmp_arr = cluster[tuple(pos)]
             # Thêm đơn hàng này vào danh sách đơn hàng của nhân viên đó
-            tmp_arr[i] = orders[i]
+            tmp_arr[str(i)] = orders[str(i)]
             # Cập nhật danh sách đơn hàng cho nhân viên đó và qua đơn hàng tiếp theo
             cluster[tuple(pos)] = tmp_arr
 
         # Nếu tồn tại 1 nhân viên nào đó không có đơn hàng nào thì quay lại random vị trí khác cho các nhân viên
-        if ({} in cluster.values()):
+        if (len(cluster) < numOfSalesman) or ({} in cluster.values()):
             continue
-        # Ngược lại, tính toán các giá trị cho từng nhân viên với danh sách đơn hàng mà họ có
         else:
-            # Quãng đường mà nhân viên phải di chuyển đi giao hàng
-            distance = {}
-            # Chi phí của mối nhân viên
-            cost = {}
-            # Lợi nhuận của mỗi nhân viên
-            salary = {}
-            # Duyệt từng nhân viên và tính toán các giá trị trên cho mỗi nhân viên
+            # Duyệt từng nhân viên và tính toán lợi nhuận của họ. Nếu có nhân viên nào có lợi nhuận âm thì quay lại random vị trí khác cho các nhân viên
             for sman in cluster:
-                distance[sman] = totalDistanceForEachCluster(sman, cluster, deplot)
-                cost[sman] = caculateCostOfEachSalesman(distance[sman])
-                salary[sman] = caculateSalaryOfEachSalesman(orders, sman, cluster)
-
-            # Nếu có nhân viên nào có lợi nhuận âm thì quay lại random vị trí khác cho các nhân viên
-            for sman in cluster:
-                if salary[sman] < cost[sman]:
+                profit = caculateProfitOfEachSaleman(sman, cluster, orders, deplot)
+                if profit < 0:
                     continue
-        
-        # Kết quả tối ưu lợi nhuận giữa các nhân viên với vị trí hiện tại
-        nMnimize = caculateMinimize(cluster, orders)
-        if minimize > nMnimize:
-            # Cập nhật kết quả tối ưu
-            minimize = nMnimize
-            # Cập nhật danh sách tối ưu các đơn hàng của các nhân viên
-            solution = dict(cluster)
+            
+            # Hàm tối ưu lộ trình cho các nhân viên giao hàng
+            tempCluster, tempMinimize = makeBestSolution(deplot, orders, cluster)
+
+            # Kết quả tối ưu lợi nhuận giữa các nhân viên với vị trí hiện tại và sau khi tối ưu lộ trình
+            if tempMinimize < minimize:
+                # Cập nhật kết quả tối ưu
+                minimize = tempMinimize
+                # Cập nhật danh sách kết quả các đơn hàng của các nhân viên
+                solution = dict(tempCluster)
+                # Cập nhật danh sách kết quả vị trí của các nhân viên
+                positionOfSalesman = tempPositionOfSalesman
+                finalCount = 0
+            elif tempMinimize == minimize:
+                finalCount += 1
+
+            # Cập nhật điều kiện dừng vòng lặp
+            temperature = temperature * cooling_rate
+
+    # In danh sách các đơn hàng của từng nhân viên
+    for i in range(numOfSalesman):
+        print("Nhan vien " + str(i) + ": " + ', '.join(str(x) for x in list(solution.values())[i]))
+                
+    # Kết quả hàm tối ưu hiện tại
+    print("Ket qua sau khi toi uu: " + str(minimize))
+    Ploteachcluster(solution, deplot)
+    
+    # Trả về kết quả
+    return solution
+
+# Hàm đổi ngẫu nhiên thứ tự đơn hàng của nhân viên đó
+def swap(cluster, nsman):
+    # Nếu nhân viên đó có từ 2 đơn hàng trở lên mới đổi được thứ tự các đơn hàng với nhau
+    if len(cluster[nsman]) > 1:
+        # Lấy ngẫu nhiên 2 đơn hàng trong danh sách
+        key1, key2 = np.random.choice(list(cluster[nsman]), 2,replace=False)
+        temp1 = cluster[nsman][key1]
+        temp2 = cluster[nsman][key2]
+        sman = {}
+        for x in cluster[nsman]:
+            if x == key1:
+                sman[key2]=temp2
+            elif x == key2:
+                sman[key1]=temp1
+            else:
+                sman[x] = cluster[nsman][x]
+        return sman
+    return cluster[nsman]
+
+# Hàm tối ưu lộ trình cho các nhân viên giao hàng
+def makeBestSolution(deplot, orders, cluster):
+    # Danh sách kết quả mới cho các đơn hàng của từng nhân viên với key là vị trí của nhân viên đó
+    solution = dict(cluster)
+    # Kết quả tối ưu lợi nhuận mới giữa các nhân viên
+    minimize = caculateMinimize(deplot, orders, cluster)
+
+    # Giới hạn số lần lặp
+    temperature = 1e+10
+    cooling_rate = 0.75
+    temperature_end = 0.0000000001
+    finalCount = 0
+
+    while (temperature > temperature_end) and (finalCount < 25):
+        # Danh sách tạm thời các đơn hàng của từng nhân viên với key là vị trí của các nhân viên
+        newCluster = dict(solution)
+
+        # Duyệt từng nhân viên
+        for sman in cluster:
+            # Đổi ngẫu nhiên thứ tự đơn hàng của nhân viên đó
+            next_order = swap(cluster, sman)
+            # Cập nhật thứ tự đơn hàng của nhân viên đó trong danh sách tạm thời các đơn hàng
+            newCluster[sman] = next_order
+            
+            # Kết quả tối ưu lợi nhuận giữa các nhân viên với thứ tự đơn hàng mới
+            tempMinimize = caculateMinimize(deplot, orders, newCluster)
+            if tempMinimize < minimize:
+                # Cập nhật kết quả tối ưu
+                minimize = tempMinimize
+                # Cập nhật danh sách kết quả các đơn hàng của nhân viên đó
+                solution = dict(newCluster)
+                finalCount = 0
+            elif tempMinimize == minimize:
+                finalCount += 1
+
         # Cập nhật điều kiện dừng vòng lặp
         temperature = temperature * cooling_rate
 
-    # In danh sách tối ưu các đơn hàng của từng nhân viên
-    for sman in solution:
-        print(str(sman) + ": " + str(solution[sman]))
-        # print("Doanh thu: " + str(salary[sman]))
-        # print("Quang duong: " + str(distance[sman]))
-        # print("Chi phi: " + str(cost[sman]))
-        # print("Loi nhuan: " + str(salary[sman] - cost[sman]))
-
-    # Kết quả hàm tối ưu hiện tại
-    print("Truoc toi uu: " + str(caculateMinimize(solution, orders)))
-    # Ploteachcluster(cluster, distance, deplot)
-    print("-----------------------------")
-
-    # Hàm tối ưu lộ trình cho nhân viên giao hàng
-    SA_new(deplot, orders, positionOfSalesman, solution)
-
-def swap(cluster, nsman):
-    if len(cluster[nsman]) == 2:
-        key1, key2 = np.random.choice(list(cluster[nsman]), 2,replace=False)
-        temp1 = cluster[nsman][key1]
-        temp2 = cluster[nsman][key2]
-        # print(str(nsman) + "==========================")
-        # print([key1, key2])
-        # print(cluster[nsman])
-        sman = {}
-        for x in cluster[nsman]:
-            if x == key1:
-                sman[key2]=temp2
-            elif x == key2:
-                sman[key1]=temp1
-            else:
-                sman[x] = cluster[nsman][x]
-        cluster[nsman] = dict(sman)
-        # print(cluster[nsman])
-        # print(str(nsman) + "==========================")
-
-    elif len(cluster[nsman]) > 2:
-        key1, key2 = np.random.choice(list(cluster[nsman]), 2,replace=False)
-        key3, key4 = np.random.choice(list(cluster[nsman]), 2,replace=False)
-        temp1 = cluster[nsman][key1]
-        temp2 = cluster[nsman][key2]
-        temp3 = cluster[nsman][key3]
-        temp4 = cluster[nsman][key4]
-        # print(str(nsman) + "==========================")
-        # print([key1, key2, key3, key4])
-        # print(cluster[nsman])
-        sman = {}
-        for x in cluster[nsman]:
-            if x == key1:
-                sman[key2]=temp2
-            elif x == key2:
-                sman[key1]=temp1
-            else:
-                sman[x] = cluster[nsman][x]
-        cluster[nsman] = dict(sman)
-        sman = {}
-        for x in cluster[nsman]:
-            if x == key3:
-                sman[key4]=temp4
-            elif x == key4:
-                sman[key3]=temp3
-            else:
-                sman[x] = cluster[nsman][x]
-        cluster[nsman] = dict(sman)
-
-        # print(cluster[nsman])
-        # print(str(nsman) + "==========================")
-
-    return cluster[nsman]
-
-
-def SA_new(deplot, orders, positionOfSalesman, cluster):
-    new_cluster = {}
-    solution = dict(cluster)
-    mintotal = 0;
-
-    for x in range(0,len(positionOfSalesman)):
-         key = tuple(positionOfSalesman[x])
-         new_cluster[key] = {}
-
-    count=0
-
-    temperature = 1e+10
-    cooling_rate = 0.85
-    temperature_end = 0.0000000001
-
-    while temperature > temperature_end:
-        count +=1
-
-        #print (count)
-        for nsman in cluster:
-            minimize = caculateMinimize(cluster, orders)
-
-            next_order = swap(cluster, nsman)
-            """next_order = np.random.permutation(cluster[nsman])"""
-
-            new_cluster[nsman] = next_order
-
-            nMinimize = caculateMinimize(new_cluster, orders)
-            #print ("total distance is " + str(dist_new), nsman)
-
-            difference = nMinimize - minimize
-
-            # if difference < 0 or math.e**(-difference/temperature) > np.random.rand():
-            if difference < 0:
-
-                solution[nsman] = new_cluster[nsman]
-                mintotal = nMinimize
-
-                # """print( "solution is " + str(solution))"""
-                # final_dist = dist_new
-                # print ("final total distance is " + str(final_dist), nsman)
-                # """Ploteachcluster(solution,final_dist)"""
-
-            temperature = temperature * cooling_rate
-
-    """Ploteachcluster(solution,final_dist)"""
-    distance = {}
-    cost = {}
-    salary = {}
-    for nsman in solution:
-        distance[nsman] = totalDistanceForEachCluster(nsman, solution, deplot)
-        cost[nsman] = caculateCostOfEachSalesman(distance[nsman])
-        salary[nsman] = caculateSalaryOfEachSalesman(orders, nsman, solution)
-
-    for nsman in solution:
-        print(str(nsman) + ": " + str(solution[nsman]))
-        # print("Doanh thu: " + str(salary[nsman]))
-        # print("Quang duong: " + str(distance[nsman]))
-        # print("Chi phi: " + str(cost[nsman]))
-        # print("Loi nhuan: " + str(salary[nsman] - cost[nsman]))
-    # print(solution)
-    distance=list(distance.values())
-    print("Sau toi uu: " + str(caculateMinimize(solution, orders)))
-    Ploteachcluster(solution, distance, deplot)
-
+    return solution, minimize
 
 if __name__=='__main__':
-    # numOfOrders = 8
-    # numOfSalesman = 3
-    # maxX = 10
-    # maxY = 10
-    # # Deplot
-    # deplot = [5, 5]
-
-    # orders = {}
-    # for i in range(numOfOrders):
-    #     orderItem = {}
-    #     x=np.random.randint(1,maxX)
-    #     y=np.random.randint(1,maxY)
-    #     orderItem["pos"] = [x,y]
-    #     v=np.random.randint(1,5)
-    #     orderItem["v"] = v
-    #     m=np.random.randint(1,5)
-    #     orderItem["m"] = m
-    #     orderItem["e"] = caculateEarningsEachOrderItem([v, m])
-    #     orders[str(i)]=orderItem
-
-    # print("Orders are " + str(list([orders[x]["pos"] for x in orders])))
-    # print("Details are " + str(list([[orders[x]["v"], orders[x]["m"]] for x in orders])))
-
-    # # orders = np.array(orders)
-
-    # kmeans(deplot, orders, numOfSalesman)
-    """---------------------------------------------------------------------------------------"""
-
     # Số đơn hàng
     numOfOrders = 0
     # Số nhân viên giao hàng
@@ -353,6 +245,18 @@ if __name__=='__main__':
     # Danh sách thông tin các đơn hàng là 1 dictionary với key là Id
     orders = {}
 
+    # for i in range(numOfOrders):
+    #     orderItem = {}
+    #     x=np.random.randint(1,maxX)
+    #     y=np.random.randint(1,maxY)
+    #     orderItem["pos"] = [x,y]
+    #     v=np.random.randint(1,5)
+    #     orderItem["v"] = v
+    #     m=np.random.randint(1,5)
+    #     orderItem["m"] = m
+    #     orderItem["e"] = caculateEarningsEachOrderItem([v, m])
+    #     orders[str(i)]=orderItem
+
     # Đọc file input và lấy dữ liệu
     with open("input.txt") as fp:
         # Tách các dòng thành 1 danh sách
@@ -362,7 +266,7 @@ if __name__=='__main__':
         # Lấy số lượng nhân viên và đơn hàng ở dòng thứ 2
         numOfSalesman, numOfOrders = [int(x) for x in Lines[1].split(' ')]
         # Lấy thông tin từng đơn hàng
-        for line in Lines[2:]:
+        for line in Lines[2:2+numOfOrders]:
             # Tách thông tin đơn hàng thành 1 list
             line = line.split(' ')
             # Thông tin đơn hàng được lưu trong 1 dictionary
@@ -383,16 +287,18 @@ if __name__=='__main__':
             m = int(line[3])
             orderItem["m"] = m
             # Tính công cho mỗi đơn hàng và lưu với key là e
-            orderItem["e"] = caculateEarningsEachOrderItem([v, m])
+            orderItem["e"] = caculateEarningsEachOrderItem(v, m)
             # Lưu thông tin đơn hàng vào danh sách các đơn hàng với key là Id
             orders[str(Id)] = orderItem
             # Tăng Id lên 1 đơn vị cho đơn hàng tiếp theo
             Id += 1
 
-    # In tọa độ các đơn hàng
-    print("Orders are " + str(list([orders[x]["pos"] for x in orders])))
-    # In thông tin về thể tích và tkhối lượng từng đơn hàng tương ứng
-    print("Details are " + str(list([[orders[x]["v"], orders[x]["m"]] for x in orders])))
-
     # Hàm xử lý
-    kmeans(deplot, orders, numOfSalesman)
+    output = makeSolution(deplot, orders, numOfSalesman)
+
+    # Ghi kết quả ra file
+    solution = open("output.txt", "w")
+    for i in range(numOfSalesman):
+        solution.write(' '.join(str(x) for x in list(output.values())[i]))
+        if i != (numOfSalesman - 1):
+            solution.write('\n') 
