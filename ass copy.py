@@ -2,6 +2,16 @@ import matplotlib.pyplot as pl
 import numpy as np
 import math
 
+# Hàm random vị trí cho các nhân viên
+def randomPositionOfSalesman(numOfSalesman):
+    # Danh sách vị trí của các nhân viên
+    S = []
+    for i in range(numOfSalesman):
+        x = np.random.randint(1, maxX)
+        y = np.random.randint(1, maxY)
+        S.append([x, y])
+    return S
+
 # Hàm tính công cho mỗi đơn hàng
 def caculateEarningsEachOrderItem(v, m):
     return 5 + v + m * 2
@@ -73,10 +83,12 @@ def Ploteachcluster(cluster, deplot):
 
 # Hàm tạo danh sách đơn hàng cho từng nhân viên giao hàng
 def makeSolution(deplot, orders, numOfSalesman):
-    # Danh sách kết quả các đơn hàng của từng nhân viên với key là id của nhân viên đó
+    # Danh sách kết quả các đơn hàng của từng nhân viên với key là vị trí của nhân viên đó
     solution = {}
     # Kết quả tối ưu lợi nhuận giữa các nhân viên
     minimize = 99999999
+    # Danh sách kết quả vị trí của các nhân viên
+    positionOfSalesman = []
 
     # Giới hạn số lần lặp
     temperature = 1e+10
@@ -84,28 +96,45 @@ def makeSolution(deplot, orders, numOfSalesman):
     temperature_end = 0.0000000001
     finalCount = 0
 
-    while (temperature > temperature_end):
-        # Danh sách tạm thời các đơn hàng của từng nhân viên với key là id của các nhân viên
+    while (temperature > temperature_end) and (finalCount < 25):
+        # Tạo random vị trí cho từng nhân viên
+        tempPositionOfSalesman = randomPositionOfSalesman(numOfSalesman)
+        numSalesman = len(set(tuple(i) for i in tempPositionOfSalesman))
+        # Nếu có nhiều nhân viên cùng 1 vị trí thì quay lại random vị trí khác cho các nhân viên
+        if numSalesman < numOfSalesman:
+            continue
+        # Danh sách tạm thời các đơn hàng của từng nhân viên với key là vị trí của các nhân viên
         cluster = {}
-        for key in range(numOfSalesman):
+        for x in range(numOfSalesman):
+            key = tuple(tempPositionOfSalesman[x])
             cluster[key] = {}
         
-        # Thực hiện gán từng đơn hàng cho nhân viên bất kỳ
+        # Thực hiện gán từng đơn hàng cho nhân viên với tiêu chí đơn hàng đó gần nhân viên nào nhất
         for i in orders:
-            # Chọn nhân viên bất kỳ
-            key = np.random.randint(0, numOfSalesman)
-            # Lấy danh sách đơn hàng của nhân viên
-            tmp_arr = cluster[key]
+            # Khoảng cách ngắn nhất của đơn hàng này đến nhân viên gần nhất
+            minDistance = 99999999
+            # Tọa độ nhân viên gần nhất
+            pos = []
+            # Duyệt từng nhân viên
+            for j in range(numOfSalesman):
+                if(minDistance > distanceBetweenTwoPoints(orders[i]["pos"],tempPositionOfSalesman[j])):
+                    # Cập nhật khoảng cách ngắn nhất
+                    minDistance = distanceBetweenTwoPoints(orders[i]["pos"],tempPositionOfSalesman[j])
+                    # Cập nhật tọa độ nhân viên gần nhất
+                    pos = tempPositionOfSalesman[j]
+
+            # Lấy danh sách đơn hàng của nhân viên gần nhất
+            tmp_arr = cluster[tuple(pos)]
             # Thêm đơn hàng này vào danh sách đơn hàng của nhân viên đó
             tmp_arr[str(i)] = orders[str(i)]
             # Cập nhật danh sách đơn hàng cho nhân viên đó và qua đơn hàng tiếp theo
-            cluster[key] = tmp_arr
+            cluster[tuple(pos)] = tmp_arr
 
-        # Nếu tồn tại 1 nhân viên nào đó không có đơn hàng nào thì quay lại random đơn hàng khác cho các nhân viên
+        # Nếu tồn tại 1 nhân viên nào đó không có đơn hàng nào thì quay lại random vị trí khác cho các nhân viên
         if (len(cluster) < numOfSalesman) or ({} in cluster.values()):
             continue
         else:
-            # Duyệt từng nhân viên và tính toán lợi nhuận của họ. Nếu có nhân viên nào có lợi nhuận âm thì quay lại random đơn hàng khác cho các nhân viên
+            # Duyệt từng nhân viên và tính toán lợi nhuận của họ. Nếu có nhân viên nào có lợi nhuận âm thì quay lại random vị trí khác cho các nhân viên
             for sman in cluster:
                 profit = caculateProfitOfEachSaleman(sman, cluster, orders, deplot)
                 if profit < 0:
@@ -120,6 +149,8 @@ def makeSolution(deplot, orders, numOfSalesman):
                 minimize = tempMinimize
                 # Cập nhật danh sách kết quả các đơn hàng của các nhân viên
                 solution = dict(tempCluster)
+                # Cập nhật danh sách kết quả vị trí của các nhân viên
+                positionOfSalesman = tempPositionOfSalesman
                 finalCount = 0
             elif tempMinimize == minimize:
                 finalCount += 1
@@ -159,7 +190,7 @@ def swap(cluster, nsman):
 
 # Hàm tối ưu lộ trình cho các nhân viên giao hàng
 def makeBestSolution(deplot, orders, cluster):
-    # Danh sách kết quả mới cho các đơn hàng của từng nhân viên với key là id của nhân viên đó
+    # Danh sách kết quả mới cho các đơn hàng của từng nhân viên với key là vị trí của nhân viên đó
     solution = dict(cluster)
     # Kết quả tối ưu lợi nhuận mới giữa các nhân viên
     minimize = caculateMinimize(deplot, orders, cluster)
@@ -170,7 +201,7 @@ def makeBestSolution(deplot, orders, cluster):
     temperature_end = 0.0000000001
     finalCount = 0
 
-    while (temperature > temperature_end):
+    while (temperature > temperature_end) and (finalCount < 25):
         # Danh sách tạm thời các đơn hàng của từng nhân viên với key là vị trí của các nhân viên
         newCluster = dict(solution)
 
