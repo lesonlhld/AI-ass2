@@ -148,7 +148,7 @@ def kmeans(deplot, orders, numOfSalesman):
                 # print("Loi nhuan: " + str(salary[sman] - cost[sman]))
             distance=list(distance.values())
             print("Truoc toi uu: " + str(caculateMinimize(cluster, orders)))
-            Ploteachcluster(cluster, distance, deplot)
+            # Ploteachcluster(cluster, distance, deplot)
             print("-----------------------------")
             SA_new(deplot, orders, S, cluster)
 
