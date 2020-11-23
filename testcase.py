@@ -3,9 +3,9 @@ import numpy as np
 # Hàm tạo testcase
 def genTest(filename):
     # Số đơn hàng
-    numOfOrders = 10
+    numOfOrders = np.random.randint(1,20)
     # Số nhân viên giao hàng
-    numOfSalesman = 3
+    numOfSalesman = np.random.randint(1,numOfOrders)
     # Tọa độ đơn hàng nhỏ nhất và lớn nhất
     minX = 0
     maxX = 10
