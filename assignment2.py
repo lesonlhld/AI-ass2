@@ -31,8 +31,7 @@ def caculateMinimize(deplot, orders, cluster):
     profit = {}
     minimize = 0
     for sman in cluster:
-        profit[sman] = caculateProfitOfEachSaleman(
-            sman, cluster, orders, deplot)
+        profit[sman] = caculateProfitOfEachSaleman(sman, cluster, orders, deplot)
     for sman in cluster:
         for nsam in cluster:
             minimize += abs(profit[sman] - profit[nsam])
@@ -82,27 +81,22 @@ def makeSolution(deplot, orders, numOfSalesman):
 
     # Giới hạn số lần lặp
     temperature = 1e+10
-    cooling_rate = 0.90
+    cooling_rate = 0.9
     temperature_end = 0.0000000001
-    finalCount = 0
 
-    while (temperature > temperature_end) and (finalCount < 200):
-        # Danh sách tạm thời các đơn hàng của từng nhân viên với key là id của các nhân viên
-        cluster = {}
+    # Danh sách tạm thời các đơn hàng của từng nhân viên với key là id của các nhân viên
+    cluster = {}
+    while (temperature > temperature_end):
         for key in range(numOfSalesman):
             cluster[key] = {}
-
+        # print("============================")
         # Thực hiện gán từng đơn hàng cho nhân viên bất kỳ
         for i in orders:
             # Chọn nhân viên bất kỳ
-            key = np.random.randint(0, numOfSalesman)
-            # Lấy danh sách đơn hàng của nhân viên
-            tmp_arr = cluster[key]
+            key = np.random.randint(0, 100) % 3
             # Thêm đơn hàng này vào danh sách đơn hàng của nhân viên đó
-            tmp_arr[str(i)] = orders[str(i)]
-            # Cập nhật danh sách đơn hàng cho nhân viên đó và qua đơn hàng tiếp theo
-            cluster[key] = tmp_arr
-
+            cluster[key][str(i)] = orders[str(i)]
+            
         # Nếu tồn tại 1 nhân viên nào đó không có đơn hàng nào thì quay lại random đơn hàng khác cho các nhân viên
         if (len(cluster) < numOfSalesman) or ({} in cluster.values()):
             continue
@@ -123,9 +117,6 @@ def makeSolution(deplot, orders, numOfSalesman):
                 minimize = tempMinimize
                 # Cập nhật danh sách kết quả các đơn hàng của các nhân viên
                 solution = dict(tempCluster)
-                finalCount = 0
-            elif tempMinimize == minimize:
-                finalCount += 1
 
             # Cập nhật điều kiện dừng vòng lặp
             temperature = temperature * cooling_rate
@@ -169,18 +160,18 @@ def makeBestSolution(deplot, orders, cluster):
 
     # Giới hạn số lần lặp
     temperature = 1e+10
-    cooling_rate = 0.85
+    cooling_rate = 0.875
     temperature_end = 0.0000000001
     finalCount = 0
 
-    while (temperature > temperature_end) and (finalCount < 200):
+    while (temperature > temperature_end) and (finalCount < 50):
         # Danh sách tạm thời các đơn hàng của từng nhân viên với key là vị trí của các nhân viên
         newCluster = dict(solution)
 
         # Duyệt từng nhân viên
-        for sman in cluster:
+        for sman in solution:
             # Đổi ngẫu nhiên thứ tự đơn hàng của nhân viên đó
-            next_order = swap(cluster, sman)
+            next_order = swap(solution, sman)
             # Cập nhật thứ tự đơn hàng của nhân viên đó trong danh sách tạm thời các đơn hàng
             newCluster[sman] = next_order
 

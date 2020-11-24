@@ -144,7 +144,9 @@ if __name__=='__main__':
             orders[str(Id)] = orderItem
             # Tăng Id lên 1 đơn vị cho đơn hàng tiếp theo
             Id += 1
-
-    assign("input.txt", "output.txt")
-    
-    caculateSolution("output.txt", deplot, orders, numOfSalesman)
+            
+    for i in range(10):
+        print("Lan " + str(i))
+        assign("input.txt", "output.txt")
+        
+        caculateSolution("output.txt", deplot, orders, numOfSalesman)
