@@ -7,9 +7,7 @@ def genTest(filename):
     # Số nhân viên giao hàng
     numOfSalesman = np.random.randint(1,numOfOrders)
     # Tọa độ đơn hàng nhỏ nhất và lớn nhất
-    minX = 0
     maxX = 10
-    minY = 0
     maxY = 10
     # Tọa độ kho
     x=np.random.randint(1,maxX)
@@ -28,6 +26,9 @@ def genTest(filename):
         fo.write(str(x) + " " + str(y) + " " + str(v) + " " + str(m))
         if i != (numOfOrders - 1):
             fo.write('\n')
+
+def caculateSolution(filename):
+    pass
 
 if __name__=='__main__':
     genTest("input.txt")

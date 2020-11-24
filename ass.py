@@ -1,6 +1,7 @@
 import matplotlib.pyplot as pl
 import numpy as np
 import math
+import time
 
 # Hàm tính công cho mỗi đơn hàng
 def caculateEarningsEachOrderItem(v, m):
@@ -198,6 +199,7 @@ def makeBestSolution(deplot, orders, cluster):
     return solution, minimize
 
 if __name__=='__main__':
+    begin = time.time()
     # Số đơn hàng
     numOfOrders = 0
     # Số nhân viên giao hàng
@@ -254,4 +256,6 @@ if __name__=='__main__':
     for i in range(numOfSalesman):
         solution.write(' '.join(str(x) for x in list(output.values())[i]))
         if i != (numOfSalesman - 1):
-            solution.write('\n') 
+            solution.write('\n')
+    end = time.time()
+    print("Time run: " + str(end - begin))
