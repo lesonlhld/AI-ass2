@@ -193,7 +193,7 @@ def makeBestSolution(deplot, orders, cluster):
 
 
 def assign(file_input, file_output):
-    begin = time.time()
+    # begin = time.time()
     # Số đơn hàng
     numOfOrders = 0
     # Số nhân viên giao hàng
@@ -251,8 +251,10 @@ def assign(file_input, file_output):
         solution.write(' '.join(str(x) for x in list(output.values())[i]))
         if i != (numOfSalesman - 1):
             solution.write('\n')
-    end = time.time()
-    print("Time run: " + str(end - begin))
+    solution.close()
+    # end = time.time()
+    # print("Time run: " + str(end - begin))
 
 
-# assign('input.txt', 'output.txt')
+if __name__ == "__main__":
+    assign('input.txt', 'output.txt')

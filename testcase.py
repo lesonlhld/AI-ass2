@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from assignment2 import assign
+from astar import assign2
 
 # Hàm tạo testcase
 def genTest(filename):
@@ -145,8 +146,14 @@ if __name__=='__main__':
             # Tăng Id lên 1 đơn vị cho đơn hàng tiếp theo
             Id += 1
             
-    for i in range(10):
-        print("Lan " + str(i))
-        assign("input.txt", "output.txt")
-        
-        caculateSolution("output.txt", deplot, orders, numOfSalesman)
+    # for i in range(10):
+    #     print("Lan " + str(i))
+    print("Random")
+    assign("input.txt", "outputRandom.txt")
+    
+    caculateSolution("outputRandom.txt", deplot, orders, numOfSalesman)
+
+    print("AStar")
+    assign2("input.txt", "outputAstar.txt")
+    
+    caculateSolution("outputAstar.txt", deplot, orders, numOfSalesman)
