@@ -1,17 +1,16 @@
 import numpy as np
 import os
 from assignment2 import assign
-from astar import assign2
 
 # Hàm tạo testcase
 def genTest(filename):
     # Số đơn hàng
-    numOfOrders = np.random.randint(1,20)
+    numOfOrders = 100
     # Số nhân viên giao hàng
     numOfSalesman = np.random.randint(1,numOfOrders)
     # Tọa độ đơn hàng nhỏ nhất và lớn nhất
-    maxX = 10
-    maxY = 10
+    maxX = 20
+    maxY = 20
     # Tọa độ kho
     x=np.random.randint(1,maxX)
     y=np.random.randint(1,maxY)
@@ -95,8 +94,9 @@ def caculateSolution(filename, deplot, orders, numOfSalesman):
 
 
 if __name__=='__main__':
-    if not os.path.isfile("input.txt"):
-        genTest("input.txt")
+    # if not os.path.isfile("input.txt"):
+    #     genTest("input.txt")
+    # genTest("input.txt")
 
     # Số đơn hàng
     numOfOrders = 0
@@ -146,14 +146,8 @@ if __name__=='__main__':
             # Tăng Id lên 1 đơn vị cho đơn hàng tiếp theo
             Id += 1
             
-    # for i in range(10):
-    #     print("Lan " + str(i))
-    print("Random")
-    assign("input.txt", "outputRandom.txt")
-    
-    caculateSolution("outputRandom.txt", deplot, orders, numOfSalesman)
-
-    print("AStar")
-    assign2("input.txt", "outputAstar.txt")
-    
-    caculateSolution("outputAstar.txt", deplot, orders, numOfSalesman)
+    for i in range(10):
+        print("Lan " + str(i))
+        assign("input.txt", "output.txt")
+        
+        caculateSolution("output.txt", deplot, orders, numOfSalesman)
