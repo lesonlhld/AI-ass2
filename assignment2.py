@@ -1,8 +1,8 @@
 import matplotlib.pyplot as pl
 import numpy as np
 import math
-import time
 import random
+import time
 
 # Hàm tính công cho mỗi đơn hàng
 def caculateEarningsEachOrderItem(v, m):
@@ -33,7 +33,8 @@ def caculateMinimize(deplot, orders, cluster, smanOld = None, profitOld = None):
     minimize = 0
     if smanOld == None:
         for sman in cluster:
-            profit[sman] = caculateProfitOfEachSaleman(sman, cluster, orders, deplot)
+            profit[sman] = caculateProfitOfEachSaleman(sman, 
+            cluster, orders, deplot)
     else:
         profit[smanOld] = caculateProfitOfEachSaleman(smanOld, cluster, orders, deplot)
     for sman in cluster:
@@ -86,8 +87,9 @@ def makeSolution(deplot, orders, numOfSalesman):
 
     # Giới hạn số lần lặp
     temperature = 1e+10
-    cooling_rate = 0.9
+    cooling_rate = 0.975
     temperature_end = 0.0000000001
+    begin = time.time()
 
     # Danh sách tạm thời các đơn hàng của từng nhân viên với key là id của các nhân viên
     cluster = {}
@@ -113,7 +115,7 @@ def makeSolution(deplot, orders, numOfSalesman):
             deplot, orders, cluster, minimize)
 
         # Kết quả tối ưu lợi nhuận giữa các nhân viên với vị trí hiện tại và sau khi tối ưu lộ trình
-        if tempMinimize <= minimize:
+        if tempMinimize < minimize:
             # Cập nhật kết quả tối ưu
             minimize = tempMinimize
             # Cập nhật danh sách kết quả các đơn hàng của các nhân viên
@@ -121,6 +123,9 @@ def makeSolution(deplot, orders, numOfSalesman):
 
         # Cập nhật điều kiện dừng vòng lặp
         temperature = temperature * cooling_rate
+        end = time.time()
+        if end - begin > 300:
+            break
 
     # # In danh sách các đơn hàng của từng nhân viên
     # for i in range(numOfSalesman):
@@ -157,33 +162,36 @@ def makeBestSolution(deplot, orders, cluster, minimize):
     # Danh sách kết quả mới cho các đơn hàng của từng nhân viên với key là id của nhân viên đó
     solution = dict(cluster)
     # Kết quả tối ưu lợi nhuận mới giữa các nhân viên
-    nMinimize, profit = caculateMinimize(deplot, orders, cluster)
+    nMinimize, profit = caculateMinimize(deplot, orders, solution)
+    
 
     # print(solution)
     # print("curent = " +str(nMinimize))
     if nMinimize/minimize < 1.2:
-        nMinimize = minimize
         # Giới hạn số lần lặp
         temperature = 1e+10
-        cooling_rate = 0.9
+        cooling_rate = 0.975
         temperature_end = 0.0000000001
+        begin = time.time()
         finalCount = 0
         
         while (temperature > temperature_end) and (finalCount < 15):
             # Danh sách tạm thời các đơn hàng của từng nhân viên với key là vị trí của các nhân viên
             newCluster = dict(solution)
+            newProfit = dict(profit)
 
             # Duyệt từng nhân viên
             for sman in solution:
                 if len(solution[sman]) > 1:
+                    #print("Min1 = " +str(caculateMinimize(deplot,orders,newCluster)))
                     # Đổi ngẫu nhiên thứ tự đơn hàng của nhân viên đó
                     next_order = swap(solution, sman)
                     # Cập nhật thứ tự đơn hàng của nhân viên đó trong danh sách tạm thời các đơn hàng
                     newCluster[sman] = next_order
                     # Kết quả tối ưu lợi nhuận giữa các nhân viên với thứ tự đơn hàng mới
-                    tempMinimize, profit = caculateMinimize(deplot, orders, newCluster, sman, profit)
+                    tempMinimize, tempProfit = caculateMinimize(deplot, orders, newCluster, sman, newProfit)
                     if tempMinimize < nMinimize:
-                        # print("Min = " +str(tempMinimize))
+                        profit = dict(tempProfit)
                         # Cập nhật kết quả tối ưu
                         nMinimize = tempMinimize
                         # Cập nhật danh sách kết quả các đơn hàng của nhân viên đó
@@ -195,12 +203,13 @@ def makeBestSolution(deplot, orders, cluster, minimize):
 
             # Cập nhật điều kiện dừng vòng lặp
             temperature = temperature * cooling_rate
-
+            end = time.time()
+            if end - begin > 30:
+                break
     return solution, nMinimize
 
 
 def assign(file_input, file_output):
-    begin = time.time()
     # Số đơn hàng
     numOfOrders = 0
     # Số nhân viên giao hàng
@@ -259,11 +268,8 @@ def assign(file_input, file_output):
         if i != (numOfSalesman - 1):
             solution.write('\n')
     solution.close()
-    end = time.time()
-    print("Time run: " + str(end - begin))
-    tempMinimize, profit = caculateMinimize(deplot, orders, output)
-    return tempMinimize
+    # print(caculateMinimize(deplot,orders,output)[0])
 
 
 if __name__ == "__main__":
-    print(assign('input.txt', 'output.txt'))
+    assign('input.txt', 'output.txt')
