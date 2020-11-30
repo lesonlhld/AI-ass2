@@ -19,7 +19,7 @@ def genTest(filename):
     # Ghi testcase ra file
     fo = open(filename, "w")
     fo.write(str(x) + " " + str(y) + "\n")
-    fo.write(str(numOfSalesman) + " " + str(numOfOrders) + "\n")
+    fo.write(str(numOfOrders) + " " + str(numOfSalesman) + "\n")
 
     for i in range(numOfOrders):
         x=np.random.randint(1,maxX)
@@ -125,7 +125,7 @@ if __name__=='__main__':
             # Lấy vị trí kho ở dòng đầu tiên
             deplot = [int(x) for x in Lines[0].split(' ')]
             # Lấy số lượng nhân viên và đơn hàng ở dòng thứ 2
-            numOfSalesman, numOfOrders = [int(x) for x in Lines[1].split(' ')]
+            numOfOrders, numOfSalesman = [int(x) for x in Lines[1].split(' ')]
             # Lấy thông tin từng đơn hàng
             for line in Lines[2:2+numOfOrders]:
                 # Tách thông tin đơn hàng thành 1 list
