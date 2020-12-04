@@ -204,7 +204,7 @@ def makeBestSolution(deplot, orders, cluster, minimize):
             # Cập nhật điều kiện dừng vòng lặp
             temperature = temperature * cooling_rate
             end = time.time()
-            if end - begin > 30:
+            if end - begin > 20:
                 break
     return solution, nMinimize
 
