@@ -98,8 +98,8 @@ if __name__=='__main__':
     # if not os.path.isfile("input.txt"):
     #     genTest("input.txt")
     for i in range(10):
-        # inputFile = "input_" + str(i) + ".txt"
-        inputFile = "input.txt"
+        inputFile = "input_" + str(i) + ".txt"
+        # inputFile = "input.txt"
         outputFile = "output.txt"
         # genTest(inputFile)
 
