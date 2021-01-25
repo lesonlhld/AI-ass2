@@ -170,4 +170,6 @@ if __name__=='__main__':
                 os.rename(outputFile, resultFile)
         else:
             os.rename(outputFile, resultFile)
+        if os.path.isfile(outputFile):
+                os.remove(outputFile)
         print("================================")
