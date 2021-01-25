@@ -101,7 +101,7 @@ if __name__=='__main__':
     #     genTest("input.txt")
     log = open("Log.txt", "a")
     log.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "\n")
-    for j in range(3):
+    for j in range(1):
         for i in range(1, 26):
             print("Testcase " + str(i))
             log.write("Testcase " + str(i) + "\n")
