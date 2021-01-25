@@ -1,5 +1,3 @@
-25/01/2021 13:59:44
-Testcase 1
 25/01/2021 14:01:01
 Testcase 1
 Time run: 3.1536502838134766
@@ -46,4 +44,20 @@ Time run: 6.481581449508667
 Current Minimize: 280.9103743908671
 Previous Minimize: 246.07497810053354
 ================================
-Testcase 10
+25/01/2021 14:03:07
+Testcase 1
+Time run: 1.5188419818878174
+Current Minimize: 14.212401570791279
+Previous Minimize: 2.9341894921131413
+================================
+Testcase 2
+Time run: 2.8508641719818115
+Current Minimize: 59.972222184867064
+Previous Minimize: 43.1483655943983
+================================
+Testcase 3
+Time run: 3.1877682209014893
+Current Minimize: 42.22243514964668
+Previous Minimize: 29.22574870540047
+================================
+Testcase 4
