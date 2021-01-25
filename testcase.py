@@ -77,8 +77,8 @@ def caculateMinimize(deplot, orders, cluster):
     for i in cluster:
         for j in cluster:
             minimize += abs(profit[i] - profit[j])
-    return minimize / 2
-    # return minimize
+    # return minimize / 2
+    return minimize
 
 # Hàm tính tổng chênh lệch lợi nhuận giữa các nhân viên dựa trên kết quả file output
 def caculateSolution(filename, deplot, orders, numOfSalesman):
@@ -185,4 +185,5 @@ if __name__=='__main__':
             log.write("================================\n")
         print("#######################################")
         log.write("\n#######################################\n")
+    log.write("\n")
     log.close()
