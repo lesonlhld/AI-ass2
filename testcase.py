@@ -74,10 +74,11 @@ def caculateMinimize(deplot, orders, cluster):
     minimize = 0
     for sman in cluster:
         profit[sman] = caculateProfitOfEachSaleman(sman, cluster, orders, deplot)
-    for sman in cluster:
-        for nsam in cluster:
-            minimize += abs(profit[sman] - profit[nsam])
-    return minimize / 2
+    for i in cluster:
+        for j in cluster:
+            minimize += abs(profit[i] - profit[j])
+    # return minimize / 2
+    return minimize
 
 # Hàm tính tổng chênh lệch lợi nhuận giữa các nhân viên dựa trên kết quả file output
 def caculateSolution(filename, deplot, orders, numOfSalesman):
