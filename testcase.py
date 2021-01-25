@@ -99,11 +99,12 @@ def caculateSolution(filename, deplot, orders, numOfSalesman):
 if __name__=='__main__':
     # if not os.path.isfile("input.txt"):
     #     genTest("input.txt")
-    logs = datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "\n"
-    for j in range(5):
+    log = open("Log.txt", "a")
+    log.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "\n")
+    for j in range(3):
         for i in range(1, 26):
             print("Testcase " + str(i))
-            logs += "Testcase " + str(i) + "\n"
+            log.write("Testcase " + str(i) + "\n")
             inputFile = str(i) + ".txt"
             outputFile = str(i) + "_.txt"
             resultFile = "result_" + str(i) + ".txt"
@@ -163,16 +164,16 @@ if __name__=='__main__':
             end = time.time()
             timeRun = end - begin
             print("Time run: " + str(timeRun))
-            logs += "Time run: " + str(timeRun) + "\n"
+            log.write("Time run: " + str(timeRun) + "\n")
 
             nMinimize = caculateSolution(outputFile, deplot, orders, numOfSalesman)
             print("Current Minimize: " + str(nMinimize))
-            logs += "Current Minimize: " + str(nMinimize) + "\n"
+            log.write("Current Minimize: " + str(nMinimize) + "\n")
             
             if os.path.isfile(resultFile):
                 minimize = caculateSolution(resultFile, deplot, orders, numOfSalesman)
                 print("Previous Minimize: " + str(minimize))
-                logs += "Previous Minimize: " + str(minimize) + "\n"
+                log.write("Previous Minimize: " + str(minimize) + "\n")
                 if nMinimize < minimize:
                     os.remove(resultFile)
                     os.rename(outputFile, resultFile)
@@ -181,9 +182,7 @@ if __name__=='__main__':
             if os.path.isfile(outputFile):
                     os.remove(outputFile)
             print("================================")
-            logs += "================================\n"
+            log.write("================================\n")
         print("#######################################")
-        logs += "\n#######################################\n"
-    log = open("Log.txt", "a")
-    log.write(logs)
+        log.write("\n#######################################\n")
     log.close()
