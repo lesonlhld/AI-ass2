@@ -97,79 +97,81 @@ def caculateSolution(filename, deplot, orders, numOfSalesman):
 if __name__=='__main__':
     # if not os.path.isfile("input.txt"):
     #     genTest("input.txt")
-    for i in range(1, 26):
-        print("Testcase " + str(i))
-        inputFile = str(i) + ".txt"
-        outputFile = str(i) + "_.txt"
-        resultFile = "result_" + str(i) + ".txt"
-        # genTest(inputFile)
+    for j in range(5):
+        for i in range(1, 26):
+            print("Testcase " + str(i))
+            inputFile = str(i) + ".txt"
+            outputFile = str(i) + "_.txt"
+            resultFile = "result_" + str(i) + ".txt"
+            # genTest(inputFile)
 
-        # Số đơn hàng
-        numOfOrders = 0
-        # Số nhân viên giao hàng
-        numOfSalesman = 0
-        # Tọa độ đơn hàng lớn nhất
-        maxX = 0
-        maxY = 0
-        # Tọa độ kho
-        deplot = []
-        # Id đơn hàng
-        Id = 0
-        minimize = 0
-        # Danh sách thông tin các đơn hàng là 1 dictionary với key là Id
-        orders = {}
+            # Số đơn hàng
+            numOfOrders = 0
+            # Số nhân viên giao hàng
+            numOfSalesman = 0
+            # Tọa độ đơn hàng lớn nhất
+            maxX = 0
+            maxY = 0
+            # Tọa độ kho
+            deplot = []
+            # Id đơn hàng
+            Id = 0
+            minimize = 0
+            # Danh sách thông tin các đơn hàng là 1 dictionary với key là Id
+            orders = {}
 
-        # Đọc file input và lấy dữ liệu
-        with open(inputFile) as fp:
-            # Tách các dòng thành 1 danh sách
-            Lines = fp.read().split('\n')
-            # Lấy vị trí kho ở dòng đầu tiên
-            deplot = [int(x) for x in Lines[0].split(' ')]
-            # Lấy số lượng nhân viên và đơn hàng ở dòng thứ 2
-            numOfOrders, numOfSalesman = [int(x) for x in Lines[1].split(' ')]
-            # Lấy thông tin từng đơn hàng
-            for line in Lines[2:2+numOfOrders]:
-                # Tách thông tin đơn hàng thành 1 list
-                line = line.split(' ')
-                # Thông tin đơn hàng được lưu trong 1 dictionary
-                orderItem = {}
-                # Lấy tọa độ của đơn hàng
-                x = int(line[0])
-                maxX = x if x > maxX else maxX
-                y = int(line[1])
-                maxY = y if y > maxY else maxY
-                # Lưu tọa độ với key là pos
-                orderItem["pos"] = [x, y]
-                # Lấy thông tin thể tích và lưu với key là v
-                v = int(line[2])
-                orderItem["v"] = v
-                # Lấy thông tin khối lượng và lưu với key là m
-                m = int(line[3])
-                orderItem["m"] = m
-                # Tính công cho mỗi đơn hàng và lưu với key là e
-                orderItem["e"] = caculateEarningsEachOrderItem(v, m)
-                # Lưu thông tin đơn hàng vào danh sách các đơn hàng với key là Id
-                orders[str(Id)] = orderItem
-                # Tăng Id lên 1 đơn vị cho đơn hàng tiếp theo
-                Id += 1
-                
-        begin = time.time()
-        assign(inputFile, outputFile)
-        end = time.time()
-        timeRun = end - begin
-        print("Time run: " + str(timeRun))
-        
-        nMinimize = caculateSolution(outputFile, deplot, orders, numOfSalesman)
-        print("Current Minimize: " + str(nMinimize))
-        
-        if os.path.isfile(resultFile):
-            minimize = caculateSolution(resultFile, deplot, orders, numOfSalesman)
-            print("Previous Minimize: " + str(minimize))
-            if nMinimize < minimize:
-                os.remove(resultFile)
+            # Đọc file input và lấy dữ liệu
+            with open(inputFile) as fp:
+                # Tách các dòng thành 1 danh sách
+                Lines = fp.read().split('\n')
+                # Lấy vị trí kho ở dòng đầu tiên
+                deplot = [int(x) for x in Lines[0].split(' ')]
+                # Lấy số lượng nhân viên và đơn hàng ở dòng thứ 2
+                numOfOrders, numOfSalesman = [int(x) for x in Lines[1].split(' ')]
+                # Lấy thông tin từng đơn hàng
+                for line in Lines[2:2+numOfOrders]:
+                    # Tách thông tin đơn hàng thành 1 list
+                    line = line.split(' ')
+                    # Thông tin đơn hàng được lưu trong 1 dictionary
+                    orderItem = {}
+                    # Lấy tọa độ của đơn hàng
+                    x = int(line[0])
+                    maxX = x if x > maxX else maxX
+                    y = int(line[1])
+                    maxY = y if y > maxY else maxY
+                    # Lưu tọa độ với key là pos
+                    orderItem["pos"] = [x, y]
+                    # Lấy thông tin thể tích và lưu với key là v
+                    v = int(line[2])
+                    orderItem["v"] = v
+                    # Lấy thông tin khối lượng và lưu với key là m
+                    m = int(line[3])
+                    orderItem["m"] = m
+                    # Tính công cho mỗi đơn hàng và lưu với key là e
+                    orderItem["e"] = caculateEarningsEachOrderItem(v, m)
+                    # Lưu thông tin đơn hàng vào danh sách các đơn hàng với key là Id
+                    orders[str(Id)] = orderItem
+                    # Tăng Id lên 1 đơn vị cho đơn hàng tiếp theo
+                    Id += 1
+                    
+            begin = time.time()
+            assign(inputFile, outputFile)
+            end = time.time()
+            timeRun = end - begin
+            print("Time run: " + str(timeRun))
+            
+            nMinimize = caculateSolution(outputFile, deplot, orders, numOfSalesman)
+            print("Current Minimize: " + str(nMinimize))
+            
+            if os.path.isfile(resultFile):
+                minimize = caculateSolution(resultFile, deplot, orders, numOfSalesman)
+                print("Previous Minimize: " + str(minimize))
+                if nMinimize < minimize:
+                    os.remove(resultFile)
+                    os.rename(outputFile, resultFile)
+            else:
                 os.rename(outputFile, resultFile)
-        else:
-            os.rename(outputFile, resultFile)
-        if os.path.isfile(outputFile):
-                os.remove(outputFile)
-        print("================================")
+            if os.path.isfile(outputFile):
+                    os.remove(outputFile)
+            print("================================")
+        print("########################################################################")
