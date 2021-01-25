@@ -271,5 +271,5 @@ def assign(file_input, file_output):
     # print(caculateMinimize(deplot,orders,output)[0])
 
 
-if __name__ == "__main__":
-    assign('input.txt', 'output.txt')
+# if __name__ == "__main__":
+#     assign('input.txt', 'output.txt')

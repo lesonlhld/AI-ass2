@@ -97,10 +97,11 @@ def caculateSolution(filename, deplot, orders, numOfSalesman):
 if __name__=='__main__':
     # if not os.path.isfile("input.txt"):
     #     genTest("input.txt")
-    for i in range(10):
-        inputFile = "input_" + str(i) + ".txt"
-        # inputFile = "input.txt"
-        outputFile = "output.txt"
+    for i in range(1, 26):
+        print("Testcase " + str(i))
+        inputFile = str(i) + ".txt"
+        outputFile = str(i) + "_.txt"
+        resultFile = "result_" + str(i) + ".txt"
         # genTest(inputFile)
 
         # Số đơn hàng
@@ -151,7 +152,6 @@ if __name__=='__main__':
                 orders[str(Id)] = orderItem
                 # Tăng Id lên 1 đơn vị cho đơn hàng tiếp theo
                 Id += 1
-            minimize = float(Lines[-1])
                 
         begin = time.time()
         assign(inputFile, outputFile)
@@ -160,10 +160,14 @@ if __name__=='__main__':
         print("Time run: " + str(timeRun))
         
         nMinimize = caculateSolution(outputFile, deplot, orders, numOfSalesman)
-        print(minimize)
-        print(nMinimize)
+        print("Current Minimize: " + str(nMinimize))
         
-        if nMinimize < minimize:
-            fo = open(inputFile, "a")
-            fo.write('\n' + str(nMinimize))
-            fo.close()
+        if os.path.isfile(resultFile):
+            minimize = caculateSolution(resultFile, deplot, orders, numOfSalesman)
+            print("Previous Minimize: " + str(minimize))
+            if nMinimize < minimize:
+                os.remove(resultFile)
+                os.rename(outputFile, resultFile)
+        else:
+            os.rename(outputFile, resultFile)
+        print("================================")
