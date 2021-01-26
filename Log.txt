@@ -35,8 +35,8 @@ Current Minimize: 260.1824673744048
 Previous Minimize: 189.83308896138627
 ================================
 Testcase 8
-Time run: 8.796574115753174
-Current Minimize: 449.7513340998229
+Time run: 8.08297085762024
+Current Minimize: 388.02777748313815
 Previous Minimize: 397.6850364911632
 ================================
 Testcase 9
