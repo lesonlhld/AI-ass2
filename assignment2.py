@@ -124,7 +124,7 @@ def makeSolution(deplot, orders, numOfSalesman):
         # Cập nhật điều kiện dừng vòng lặp
         temperature = temperature * cooling_rate
         end = time.time()
-        if end - begin > 300:
+        if end - begin > 500:
             break
 
     # # In danh sách các đơn hàng của từng nhân viên
@@ -175,7 +175,7 @@ def makeBestSolution(deplot, orders, cluster, minimize):
         begin = time.time()
         finalCount = 0
         
-        while (temperature > temperature_end) and (finalCount < 15):
+        while (temperature > temperature_end) and (finalCount < 50):
             # Danh sách tạm thời các đơn hàng của từng nhân viên với key là vị trí của các nhân viên
             newCluster = dict(solution)
             newProfit = dict(profit)
