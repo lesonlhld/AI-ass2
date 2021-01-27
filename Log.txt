@@ -1116,3 +1116,132 @@ Previous Minimize: 7180.445573051445
 
 #######################################
 
+27/01/2021 02:35:28
+Testcase 1
+Time run: 2.535740375518799
+Current Minimize: 18.30642874765583
+Previous Minimize: 5.868378984226283
+================================
+Testcase 2
+Time run: 5.518958568572998
+Current Minimize: 125.52494105712465
+Previous Minimize: 80.57105025146873
+================================
+Testcase 3
+Time run: 1.375436544418335
+Current Minimize: 66.43938402550378
+Previous Minimize: 58.45149741080094
+================================
+Testcase 4
+Time run: 2.0757391452789307
+Current Minimize: 23.261704436952385
+Previous Minimize: 9.906766793742023
+================================
+Testcase 5
+Time run: 5.439842224121094
+Current Minimize: 122.94427994990988
+Previous Minimize: 48.07901663314674
+================================
+Testcase 6
+Time run: 11.15036654472351
+Current Minimize: 598.2483378618685
+Previous Minimize: 512.3048908163082
+================================
+Testcase 7
+Time run: 4.121844053268433
+Current Minimize: 206.8418063835984
+Previous Minimize: 189.83308896138627
+================================
+Testcase 8
+Time run: 6.836455345153809
+Current Minimize: 416.43580308144385
+Previous Minimize: 388.02777748313815
+================================
+Testcase 9
+Time run: 10.594802856445312
+Current Minimize: 341.01663416014185
+Previous Minimize: 246.07497810053354
+================================
+Testcase 10
+Time run: 8.09824538230896
+Current Minimize: 253.46650099593967
+Previous Minimize: 159.14522910504314
+================================
+Testcase 11
+Time run: 75.02297115325928
+Current Minimize: 1215.488328264593
+Previous Minimize: 1133.8849252579012
+================================
+Testcase 12
+Time run: 18.11008381843567
+Current Minimize: 844.7150324950634
+Previous Minimize: 755.8114414509934
+================================
+Testcase 13
+Time run: 13.80287504196167
+Current Minimize: 597.7293001658746
+Previous Minimize: 513.9129320671228
+================================
+Testcase 14
+Time run: 46.17630743980408
+Current Minimize: 1306.2671992756707
+Previous Minimize: 975.7304232400327
+================================
+Testcase 15
+Time run: 29.26298689842224
+Current Minimize: 971.3495850603897
+Previous Minimize: 774.2082358079106
+================================
+Testcase 16
+Time run: 47.20294785499573
+Current Minimize: 1971.6714385628309
+Previous Minimize: 2061.0211942771525
+================================
+Testcase 17
+Time run: 79.75972437858582
+Current Minimize: 1734.5232297769078
+Previous Minimize: 1357.8860917957004
+================================
+Testcase 18
+Time run: 24.49004340171814
+Current Minimize: 2393.150936438557
+Previous Minimize: 1940.754304441864
+================================
+Testcase 19
+Time run: 10.570681095123291
+Current Minimize: 1598.213249198497
+Previous Minimize: 1178.9517051783594
+================================
+Testcase 20
+Time run: 10.546411275863647
+Current Minimize: 1912.9623026307827
+Previous Minimize: 1364.8172809750006
+================================
+Testcase 21
+Time run: 16.253167867660522
+Current Minimize: 1432.3929429178515
+Previous Minimize: 1605.0881648241673
+================================
+Testcase 22
+Time run: 29.7924702167511
+Current Minimize: 4042.124725135022
+Previous Minimize: 3286.724579205964
+================================
+Testcase 23
+Time run: 4.331183433532715
+Current Minimize: 1576.0334397749784
+Previous Minimize: 678.3073800278405
+================================
+Testcase 24
+Time run: 241.06473541259766
+Current Minimize: 12000.376328418013
+Previous Minimize: 10542.361186683253
+================================
+Testcase 25
+Time run: 235.06377816200256
+Current Minimize: 7853.683591601247
+Previous Minimize: 7180.445573051445
+================================
+
+#######################################
+
